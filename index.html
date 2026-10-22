@@ -287,19 +287,28 @@ details.sol .reveal { margin-top: 8px; }
 
 /* панель рисования */
 .vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
-.draw { position: fixed; z-index: 15; top: calc(env(safe-area-inset-top, 0px) + var(--hh, 53px)); right: 0; bottom: 0; width: 50vw; display: grid; grid-template-rows: auto auto minmax(0, 1fr); background: var(--sheet); border-left: 1px solid var(--line); box-shadow: -12px 0 30px rgb(10 15 40 / 10%); padding-bottom: env(safe-area-inset-bottom, 0px); padding-right: env(safe-area-inset-right, 0px); }
+.draw { position: fixed; z-index: 15; top: calc(env(safe-area-inset-top, 0px) + var(--hh, 53px)); right: 0; bottom: 0; width: 50vw; display: grid; grid-template-rows: auto auto auto minmax(0, 1fr); background: var(--sheet); border-left: 1px solid var(--line); box-shadow: -12px 0 30px rgb(10 15 40 / 10%); padding-bottom: env(safe-area-inset-bottom, 0px); padding-right: env(safe-area-inset-right, 0px); }
 body.split #app { margin-right: 50vw; }
 body.split .pbar .score { margin-left: 0; }
-.dr-cond { border-bottom: 1px solid var(--line); padding: 10px 14px; display: grid; gap: 6px; min-width: 0; }
+.dr-cond { padding: 10px 14px 8px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; min-width: 0; }
+.draw { grid-template-columns: minmax(0, 1fr); }
+.dr-q img, .dr-q svg { max-width: 100%; height: auto; }
+.dr-q .tblw, .dr-q pre { max-width: 100%; overflow-x: auto; }
 .dr-meta { display: flex; align-items: center; gap: 10px; }
 .dr-no { width: 30px; height: 30px; display: grid; place-items: center; border: 2px solid var(--ink); border-radius: 4px; font: 700 14px/1 var(--f-mono); flex: none; }
 .dr-lbl { font: 600 13px var(--f-ui); color: var(--ink2); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .dr-fold { margin-left: auto; border: 1px solid var(--line); background: var(--paper); border-radius: 8px; padding: 4px 10px; font-size: 12.5px; flex: none; }
-.dr-q { max-height: 26vh; overflow-y: auto; font-size: 15px; line-height: 1.5; }
-.dr-q .bigtext { display: none; }
+/* условие: высота задаётся перетаскиванием полоски (--qh), внутри своя прокрутка */
+.dr-q { height: var(--qh, 36vh); overflow-y: auto; overscroll-behavior: contain; font-size: 15px; line-height: 1.5; padding-right: 4px; }
+.dr-q > :first-child { margin-top: 0; }
+.dr-grip { height: 18px; display: grid; place-items: center; cursor: row-resize; touch-action: none; user-select: none; -webkit-user-select: none; border-top: 1px solid var(--line); background: var(--sheet); }
+.dr-grip i { width: 46px; height: 4px; border-radius: 2px; background: var(--cell); transition: background .15s; }
+.dr-grip:hover i, .dr-grip.on i, .dr-grip:focus-visible i { background: var(--hue); }
+.dr-grip:focus-visible { outline: none; }
+@media (pointer: coarse) { .dr-grip { height: 26px; } .dr-grip i { width: 58px; height: 5px; } }
 .dr-fig { max-width: 240px; margin-top: 6px; } .dr-fig svg { width: 100%; height: auto; }
 .draw.folded .dr-q { display: none; }
-.dr-tools { display: flex; flex-wrap: wrap; gap: 6px 10px; padding: 8px 12px; border-bottom: 1px solid var(--line); background: var(--paper); align-items: center; }
+.dr-tools { display: flex; flex-wrap: wrap; gap: 6px 10px; padding: 8px 12px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--paper); align-items: center; }
 .dr-grp { display: flex; gap: 3px; align-items: center; }
 .dr-grp + .dr-grp { padding-left: 10px; border-left: 1px solid var(--line); }
 .dr-b { width: 34px; height: 34px; display: grid; place-items: center; border: 1px solid transparent; border-radius: 8px; background: transparent; color: var(--ink2); padding: 0; }
@@ -320,8 +329,25 @@ body.split .pbar .score { margin-left: 0; }
 .dr-cvs, .dr-cv, .dr-over { position: absolute; inset: 0; }
 .dr-over { cursor: crosshair; touch-action: none; }
 .dr-over[data-tool="text"] { cursor: text; }
-.dr-hint { position: absolute; left: 12px; bottom: 8px; margin: 0; font-size: 12px; color: var(--ink3); pointer-events: none; }
-.dr-text { position: absolute; z-index: 3; min-width: 140px; border: 1px dashed var(--hue); background: color-mix(in srgb, var(--sheet) 85%, transparent); font-family: var(--f-text); padding: 2px 4px; line-height: 1.25; resize: none; outline: none; }
+.dr-hint { position: absolute; left: 12px; right: 150px; bottom: 8px; margin: 0; font-size: 12px; line-height: 1.35; color: var(--ink3); pointer-events: none; }
+.dr-back { display: inline-flex; align-items: center; gap: 2px; flex: none; border: 1px solid var(--hue); background: color-mix(in srgb, var(--hue) 8%, var(--sheet)); color: var(--hue); border-radius: 8px; padding: 5px 11px 5px 6px; font: 600 13px/1 var(--f-ui); }
+.dr-back svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.dr-back:hover { background: var(--hue); color: var(--sheet); }
+.dr-zoom { position: absolute; z-index: 3; right: 10px; bottom: 10px; display: flex; align-items: center; gap: 2px; padding: 3px; background: var(--sheet); border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 4px 14px rgb(10 15 40 / 10%); }
+.dr-zv { min-width: 54px; border: 0; background: none; border-radius: 6px; padding: 6px 2px; font: 600 12.5px/1 var(--f-mono); color: var(--ink2); font-variant-numeric: tabular-nums; }
+.dr-zv:hover { background: var(--chip); color: var(--ink); }
+.dr-over[data-tool="hand"], .dr-over.grab { cursor: grab; }
+.dr-over.panning { cursor: grabbing; }
+/* редактор надписи: ширина строки задана, текст переносится по словам, высота растёт */
+.dr-ted { position: absolute; z-index: 4; }
+.dr-stage.editing .dr-hint { display: none; }
+.dr-twrap { position: relative; }
+.dr-text { display: block; margin: 0; border: 1.5px dashed var(--hue); border-radius: 4px; padding: 4px 6px; background: color-mix(in srgb, var(--sheet) 88%, transparent); font-family: "PT Serif", Georgia, serif; resize: none; overflow: hidden; white-space: pre-wrap; overflow-wrap: anywhere; outline: none; min-height: 0; }
+.dr-tw { position: absolute; top: 50%; right: -9px; width: 16px; height: 34px; transform: translateY(-50%); border-radius: 8px; background: var(--hue); border: 3px solid var(--sheet); cursor: ew-resize; touch-action: none; }
+.dr-tbar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 6px; }
+.dr-tbar button { border: 1px solid var(--line); background: var(--sheet); color: var(--ink); border-radius: 8px; padding: 5px 10px; font: 600 12.5px var(--f-ui); box-shadow: 0 2px 8px rgb(10 15 40 / 10%); }
+.dr-tbar .dr-tok { background: var(--hue); border-color: var(--hue); color: var(--sheet); }
+.dr-tbar .small { background: color-mix(in srgb, var(--sheet) 85%, transparent); border-radius: 6px; padding: 2px 6px; }
 .dr-layers { position: absolute; z-index: 4; top: 10px; right: 10px; width: min(260px, calc(100% - 20px)); background: var(--sheet); border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 10px 30px rgb(10 15 40 / 16%); padding: 8px; display: grid; gap: 6px; }
 .dr-lh { display: flex; align-items: center; justify-content: space-between; padding-left: 6px; font-size: 13px; }
 .dr-ll { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; max-height: 260px; overflow-y: auto; }
@@ -335,7 +361,6 @@ body.split .pbar .score { margin-left: 0; }
   .draw { top: 0; left: 0; width: auto; z-index: 30; border-left: 0; padding-top: env(safe-area-inset-top, 0px); padding-left: env(safe-area-inset-left, 0px); }
   body.split #app { margin-right: 0; }
   .dr-tools { flex-wrap: nowrap; overflow-x: auto; }
-  .dr-q { max-height: 22vh; }
 }
 
 /* меню предметов */
@@ -433,6 +458,60 @@ body.split .pbar .score { margin-left: 0; }
 
 .figure-plot:has(.hmap), .figure-plot:has(.bfig) { max-width: 620px; } .gfig.hmap { max-width: 620px; } .gfig.bfig { max-width: 420px; }
 
+/* история решений: день или предмет — блок; внутри строки ответов, как в журнале */
+.htab svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; vertical-align: -3px; margin-right: 6px; }
+.tab.htab[aria-current="page"] { border-color: var(--hue); color: var(--hue); }
+.hhead { gap: 12px; }
+.hstats:empty { display: none; }
+.hstats { display: grid; grid-template-columns: repeat(4, max-content); gap: 10px 34px; }
+.hctl { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; padding-top: 4px; }
+.hsel { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.hsel select { min-width: 0; max-width: 100%; font: 500 14px var(--f-ui); color: var(--ink); background: var(--sheet); border: 1px solid var(--line); border-radius: 9px; padding: 6px 10px; }
+.hchk { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--ink2); cursor: pointer; }
+.hchk input { width: 17px; height: 17px; margin: 0; accent-color: var(--hue); }
+.hgrp { margin-top: 28px; display: grid; gap: 12px; }
+.hgh { margin: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; font: 700 clamp(18px, 2.4vw, 22px)/1.25 var(--f-disp); letter-spacing: -.01em; }
+.hgh small { font: 500 12px/1.2 var(--f-mono); color: var(--ink3); letter-spacing: .02em; }
+.hdot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--hue); margin-right: 9px; vertical-align: .12em; flex: none; }
+.hsub { background: var(--sheet); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.hsh { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; padding: 10px 14px; border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--hue) 6%, var(--sheet)); }
+.hsh b { font: 600 15px/1.3 var(--f-ui); }
+.hsh .hdot { margin-right: -4px; }
+.hsh .btn { margin-left: auto; }
+.btn.sm { padding: 5px 10px; font-size: 13px; border-radius: 8px; }
+.btn.danger { background: var(--bad); border-color: var(--bad); color: var(--sheet); font-weight: 600; }
+.hlist { list-style: none; margin: 0; padding: 0; }
+.hrow { display: grid; grid-template-columns: 46px 34px minmax(0, 1fr); grid-template-areas: "time no main"; gap: 12px; padding: 12px 14px; align-items: start; }
+.hrow + .hrow { border-top: 1px solid var(--line); }
+.hrow time { grid-area: time; font: 500 12.5px/34px var(--f-mono); color: var(--ink3); font-variant-numeric: tabular-nums; }
+.hno { grid-area: no; width: 34px; height: 34px; display: grid; place-items: center; border: 2px solid var(--ink); border-radius: 4px; font: 700 14px/1 var(--f-mono); }
+.hmain { grid-area: main; min-width: 0; display: grid; gap: 4px; }
+.htl { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; min-height: 34px; }
+.htt { font: 600 15px/1.3 var(--f-ui); }
+.hres { font: 600 11.5px/1 var(--f-mono); padding: 4px 8px; border-radius: 99px; background: var(--okbg); color: var(--ok); white-space: nowrap; }
+.hrow.bad .hres { background: var(--badbg); color: var(--bad); }
+.hq { margin: 0; color: var(--ink2); font-size: 14px; line-height: 1.45; overflow-wrap: anywhere; }
+.hq mjx-container { font-size: 100% !important; }
+.ha { margin: 0; color: var(--ink2); font-size: 13.5px; overflow-wrap: anywhere; }
+.ha b { font: 600 13.5px var(--f-mono); color: var(--ink); }
+.hact { display: flex; flex-wrap: wrap; gap: 2px 18px; }
+.lnk { border: 0; background: none; padding: 3px 0; color: var(--hue); font: 600 13.5px var(--f-ui); text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--hue) 35%, transparent); text-underline-offset: 3px; }
+.lnk:hover { text-decoration-color: currentColor; }
+.hempty { margin-top: 24px; padding: 26px 20px; border: 1px dashed var(--cell); border-radius: 14px; background: var(--sheet); display: grid; gap: 8px; justify-items: start; color: var(--ink2); max-width: 640px; }
+.hempty b { color: var(--ink); font-size: 16px; } .hempty p { margin: 0; }
+.hnone { margin: 24px 0 0; color: var(--ink2); }
+.hmore { margin-top: 18px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.hclear { margin-top: 30px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; color: var(--ink2); font-size: 14px; }
+@media (max-width: 560px) {
+  .htab span { display: none; } .htab svg { margin-right: 0; } .tab.htab { padding-inline: 9px; }
+  .hstats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 20px; }
+  .hrow { grid-template-columns: 34px minmax(0, 1fr); grid-template-areas: "no time" "no main"; row-gap: 0; padding: 12px; }
+  .hrow time { line-height: 1.3; font-size: 12px; }
+  .htl { min-height: 0; }
+  .hsh .btn { margin-left: 0; }
+  .dr-hint { right: 140px; font-size: 11.5px; }
+}
+
 :root{--mathb:#0b7fa8;--phys:#5b3cc4;--chem:#2b7a3b;--bio:#5e7d00;--hist:#9a3b1b;--soc:#7d3aa6;--geo:#00796b;--lit:#8c2f6e;--en:#b3261e;--de:#4a5568;--fr:#1f5fbf;--es:#a66a00;--zh:#c0151d;}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--mathb:#5cc6ea;--phys:#ab99ff;--chem:#7fd38c;--bio:#b6d957;--hist:#ff9c78;--soc:#d2a2f2;--geo:#52d1bf;--lit:#f28fcf;--en:#ff8a80;--de:#b7c0d0;--fr:#8db7ff;--es:#ffc35a;--zh:#ff7b80;}}
 :root[data-theme="dark"]{--mathb:#5cc6ea;--phys:#ab99ff;--chem:#7fd38c;--bio:#b6d957;--hist:#ff9c78;--soc:#d2a2f2;--geo:#52d1bf;--lit:#f28fcf;--en:#ff8a80;--de:#b7c0d0;--fr:#8db7ff;--es:#ffc35a;--zh:#ff7b80;}
@@ -464,6 +543,17 @@ const R = {
   coin: (p = .5) => Math.random() < p,
   intEx(a, b, ex) { let x, g = 0; do { x = R.int(a, b); } while (ex.includes(x) && ++g < 500); return x; }
 };
+// воспроизводимая генерация: задание из истории пересоздаётся по тому же зерну
+function mulberry32(a) { return () => { a |= 0; a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+function withSeed(seed, fn) { const orig = Math.random; Math.random = mulberry32(seed); try { return fn(); } finally { Math.random = orig; } }
+const newSeed = () => Math.floor(Math.random() * 4294967296) >>> 0;
+// отпечаток задания без SVG-идентификаторов: совпадает, если задание воспроизвелось точно
+function fingerprint(o) {
+  const strip = x => String(x ?? '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+  const s = strip(o.q) + '|' + JSON.stringify(o.a ?? o.fields ?? '') + '|' + strip(o.show); let h = 0x811c9dc5;
+  for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return (h >>> 0).toString(36);
+}
 // выбор подтипа задания с учётом выбранных тем (TOPIC — индексы разрешённых подтипов)
 let TOPIC = null, LAST_SUB = null;
 const sub = n => { const ok = TOPIC ? TOPIC.filter(i => i < n) : null; return (LAST_SUB = ok && ok.length ? R.pick(ok) : R.int(0, n - 1)); };
@@ -3570,32 +3660,38 @@ EGE.math.exam = 'профильная математика'; EGE.rus.exam = 'р�
 EGE.math.lead = 'Часть 1 с автопроверкой, часть 2 со сверкой решения. Чертежи и графики.'; EGE.rus.lead = 'Нормы, орфография, пунктуация, работа с текстом и сочинение.'; EGE.inf.lead = 'КЕГЭ на компьютере: задания с файлами, программирование, логика.';
 
 // ===== Черновик для рисования: своё полотно у каждого задания =====
+// Объекты хранятся в координатах листа; масштаб и сдвиг — это «вид» (s, x, y): экран = лист × s + (x, y).
 const Draw = (() => {
   const I = { // иконки 20×20, обводка currentColor
     pen: '<path d="M4 16l1-4 8.5-8.5a1.4 1.4 0 0 1 2 2L7 14z"/><path d="M12 5l3 3"/>', marker: '<path d="M6 13l-2 4h4l1-2"/><path d="M6 13l7-9 4 3-7 9z"/>', eraser: '<path d="M8 16h9"/><path d="M3.5 12.5l7-7a1.5 1.5 0 0 1 2 0l2.5 2.5a1.5 1.5 0 0 1 0 2L9 16H6.5z"/>',
     line: '<path d="M4 16L16 4"/>', arrow: '<path d="M4 16L16 4M9.5 4H16v6.5"/>', rect: '<rect x="3.5" y="5.5" width="13" height="9" rx="1"/>', circle: '<circle cx="10" cy="10" r="6.5"/>', ellipse: '<ellipse cx="10" cy="10" rx="7.5" ry="4.5"/>',
     tri: '<path d="M10 3.5l7 12.5H3z"/>', rtri: '<path d="M4 4v12h12z"/><path d="M4 13h3v3"/>', text: '<path d="M5 5h10M10 5v11M8 16h4"/>',
+    hand: '<path d="M10 2.5v15M2.5 10h15"/><path d="M7.8 4.7L10 2.5l2.2 2.2M7.8 15.3l2.2 2.2 2.2-2.2M4.7 7.8L2.5 10l2.2 2.2M15.3 7.8l2.2 2.2-2.2 2.2"/>',
     undo: '<path d="M7.5 5L4 8.5 7.5 12"/><path d="M4 8.5h8a4 4 0 0 1 0 8H9"/>', redo: '<path d="M12.5 5L16 8.5 12.5 12"/><path d="M16 8.5H8a4 4 0 0 0 0 8h3"/>', trash: '<path d="M4.5 6h11M8 6V4h4v2M6 6l1 10.5h6L14 6"/>',
     grid: '<path d="M3 7.5h14M3 12.5h14M7.5 3v14M12.5 3v14"/>', snap: '<path d="M6 4v6a4 4 0 0 0 8 0V4"/><path d="M6 7h2.5M11.5 7H14"/>', fill: '<rect x="4" y="4" width="12" height="12" rx="2"/><path d="M4 11l7-7M7 16l9-9M12 16l4-4"/>',
     image: '<rect x="3" y="4" width="14" height="12" rx="1.5"/><path d="M5 14l4-4 3 3 2-2 2 2"/><circle cx="13" cy="7.5" r="1"/>', layers: '<path d="M10 3l7 4-7 4-7-4z"/><path d="M3 11l7 4 7-4"/>', save: '<path d="M10 3v9M6 8.5l4 4 4-4M4 15.5h12"/>',
-    full: '<path d="M3 8V3h5M12 3h5v5M17 12v5h-5M8 17H3v-5"/>', unfull: '<path d="M8 3v5H3M17 8h-5V3M12 17v-5h5M3 12h5v5"/>', close: '<path d="M5 5l10 10M15 5L5 15"/>',
+    full: '<path d="M3 8V3h5M12 3h5v5M17 12v5h-5M8 17H3v-5"/>', unfull: '<path d="M8 3v5H3M17 8h-5V3M12 17v-5h5M3 12h5v5"/>', close: '<path d="M5 5l10 10M15 5L5 15"/>', back: '<path d="M12 4.5L6.5 10l5.5 5.5"/>',
     eye: '<path d="M2 10s3-5 8-5 8 5 8 5-3 5-8 5-8-5-8-5z"/><circle cx="10" cy="10" r="2"/>', eyeoff: '<path d="M3 3l14 14M8 5.3A8 8 0 0 1 10 5c5 0 8 5 8 5a14 14 0 0 1-2.6 3M6 6.6C3.6 8 2 10 2 10s3 5 8 5a8 8 0 0 0 3.5-.8"/>',
-    up: '<path d="M10 15V5M6 9l4-4 4 4"/>', down: '<path d="M10 5v10M6 11l4 4 4-4"/>', plus: '<path d="M10 4v12M4 10h12"/>'
+    up: '<path d="M10 15V5M6 9l4-4 4 4"/>', down: '<path d="M10 5v10M6 11l4 4 4-4"/>', plus: '<path d="M10 4v12M4 10h12"/>', minus: '<path d="M4 10h12"/>'
   };
   const ico = (n, t) => `<svg viewBox="0 0 20 20" aria-hidden="true">${I[n]}</svg>${t ? `<span class="vh">${t}</span>` : ''}`;
-  const TOOLS = [['pen', 'Перо'], ['marker', 'Маркер'], ['eraser', 'Ластик'], ['line', 'Отрезок'], ['arrow', 'Стрелка'], ['rect', 'Прямоугольник'], ['circle', 'Окружность'], ['ellipse', 'Эллипс'], ['tri', 'Треугольник'], ['rtri', 'Прямоугольный треугольник'], ['text', 'Текст']];
+  const TOOLS = [['pen', 'Перо'], ['marker', 'Маркер'], ['eraser', 'Ластик'], ['line', 'Отрезок'], ['arrow', 'Стрелка'], ['rect', 'Прямоугольник'], ['circle', 'Окружность'], ['ellipse', 'Эллипс'], ['tri', 'Треугольник'], ['rtri', 'Прямоугольный треугольник'], ['text', 'Текст'], ['hand', 'Двигать лист']];
   const COLORS = ['ink', '#d6402f', '#2a5bd7', '#1f9a52', '#e08900', '#8b43c9', '#0e9fa5'];
-  const SHAPES = ['line', 'arrow', 'rect', 'circle', 'ellipse', 'tri', 'rtri'], G = 22;
+  const SHAPES = ['line', 'arrow', 'rect', 'circle', 'ellipse', 'tri', 'rtri'], G = 22, ZMIN = .3, ZMAX = 6;
   let set = { tool: 'pen', color: 'ink', width: 3, fill: false, grid: true, snap: true };
   try { Object.assign(set, JSON.parse(localStorage.getItem('ege26:draw')) || {}); } catch (e) { }
   const saveSet = () => { try { localStorage.setItem('ege26:draw', JSON.stringify(set)); } catch (e) { } };
-  let el, stage, over, cv = [], item = null, cardEl = null, cur = null, raf = 0, W = 0, H = 0, dpr = 1;
+  let el, stage, over, cv = [], item = null, cardEl = null, cur = null, curPid = null, raf = 0, vraf = 0, W = 0, H = 0, dpr = 1;
+  const ptrs = new Map(); let gest = null, panP = null, lockDraw = false, spaceDown = false, overStage = false;
+  const api = { closer: null };
   const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
   const colorOf = c => (c === 'ink' ? css('--ink') || '#151a2d' : c);
+  const reqClose = () => (api.closer ? api.closer() : close());
 
   function build() {
     el = h(`<aside class="draw" id="draw" hidden aria-label="Черновик к заданию">
-      <div class="dr-cond"><div class="dr-meta"><b class="dr-no"></b><span class="dr-lbl">Условие</span><button class="dr-fold" type="button" aria-expanded="true">Свернуть</button></div><div class="dr-q q"></div></div>
+      <div class="dr-cond"><div class="dr-meta"><button class="dr-back" type="button" data-act="close">${ico('back')}К заданию</button><b class="dr-no"></b><span class="dr-lbl">Условие</span><button class="dr-fold" type="button" aria-expanded="true">Свернуть</button></div><div class="dr-q q"></div></div>
+      <div class="dr-grip" role="separator" aria-orientation="horizontal" tabindex="0" aria-label="Граница условия: потяните вверх или вниз, чтобы изменить размер" title="Потяните, чтобы изменить размер условия. Двойное нажатие — больше или меньше"><i></i></div>
       <div class="dr-tools" role="toolbar" aria-label="Инструменты">
         <div class="dr-grp">${TOOLS.map(([k, t]) => `<button class="dr-b" data-tool="${k}" title="${t}" aria-label="${t}">${ico(k)}</button>`).join('')}</div>
         <div class="dr-grp dr-col">${COLORS.map(c => `<button class="dr-sw" data-color="${c}" title="${c === 'ink' ? 'Цвет текста' : c}" aria-label="Цвет ${c === 'ink' ? 'текста' : c}" style="--c:${c === 'ink' ? 'var(--ink)' : c}"></button>`).join('')}<label class="dr-sw dr-custom" title="Свой цвет"><input type="color" id="drColor" aria-label="Свой цвет" value="#c2185b"></label></div>
@@ -3603,26 +3699,40 @@ const Draw = (() => {
         <div class="dr-grp"><button class="dr-b" data-act="undo" title="Отменить (Ctrl+Z)" aria-label="Отменить">${ico('undo')}</button><button class="dr-b" data-act="redo" title="Вернуть (Ctrl+Y)" aria-label="Вернуть">${ico('redo')}</button><button class="dr-b" data-act="clear" title="Очистить слой" aria-label="Очистить слой">${ico('trash')}</button></div>
         <div class="dr-grp"><button class="dr-b" data-tg="grid" title="Клетка" aria-label="Клетка">${ico('grid')}</button><button class="dr-b" data-tg="snap" title="Привязка фигур к клеткам" aria-label="Привязка к клеткам">${ico('snap')}</button><button class="dr-b" data-act="fig" title="Вставить рисунок задачи" aria-label="Вставить рисунок задачи">${ico('image')}</button><button class="dr-b" data-act="layers" title="Слои" aria-label="Слои">${ico('layers')}</button><button class="dr-b dl" data-act="save" title="Сохранить картинку" aria-label="Сохранить картинку">${ico('save')}</button><button class="dr-b" data-act="full" title="Во весь экран" aria-label="Во весь экран">${ico('full')}</button><button class="dr-b" data-act="close" title="Закрыть" aria-label="Закрыть черновик">${ico('close')}</button></div>
       </div>
-      <div class="dr-stage"><div class="dr-cvs"></div><canvas class="dr-over"></canvas><div class="dr-layers" hidden><div class="dr-lh"><b>Слои</b><button class="dr-b" data-act="addlayer" title="Новый слой" aria-label="Новый слой">${ico('plus')}</button></div><ol class="dr-ll"></ol></div><p class="dr-hint">Рисуйте пальцем, стилусом или мышью. Каждое задание хранит свой рисунок.</p></div>
+      <div class="dr-stage"><div class="dr-cvs"></div><canvas class="dr-over"></canvas><div class="dr-layers" hidden><div class="dr-lh"><b>Слои</b><button class="dr-b" data-act="addlayer" title="Новый слой" aria-label="Новый слой">${ico('plus')}</button></div><ol class="dr-ll"></ol></div>
+        <div class="dr-zoom" role="group" aria-label="Масштаб"><button class="dr-b sm" data-act="zout" title="Отдалить" aria-label="Отдалить">${ico('minus')}</button><button class="dr-zv" type="button" data-act="zreset" title="Вернуть 100%" aria-label="Масштаб 100%, вернуть исходный вид">100%</button><button class="dr-b sm" data-act="zin" title="Приблизить" aria-label="Приблизить">${ico('plus')}</button></div>
+        <p class="dr-hint">Рисуйте пальцем, стилусом или мышью. Масштаб — двумя пальцами, колесом с Ctrl или кнопками.</p></div>
     </aside>`);
     document.body.appendChild(el);
     stage = $('.dr-stage', el); over = $('.dr-over', el);
     el.addEventListener('click', onClick);
     $('#drWidth', el).addEventListener('input', e => { set.width = +e.target.value; $('#drWv', el).textContent = set.width; saveSet(); });
     $('#drColor', el).addEventListener('input', e => { set.color = e.target.value; saveSet(); sync(); });
-    $('.dr-fold', el).addEventListener('click', e => { const f = el.classList.toggle('folded'); e.currentTarget.textContent = f ? 'Развернуть' : 'Свернуть'; e.currentTarget.setAttribute('aria-expanded', String(!f)); requestAnimationFrame(resize); });
+    $('.dr-fold', el).addEventListener('click', () => setFold(!el.classList.contains('folded')));
+    wireGrip();
+    new ResizeObserver(() => { if (!gd) applyQH(); }).observe(el);
+    if (window.visualViewport) window.visualViewport.addEventListener('resize', () => { if (ed) keepVisible(); });
     over.addEventListener('pointerdown', down); over.addEventListener('pointermove', move); over.addEventListener('pointerup', up); over.addEventListener('pointercancel', up);
+    stage.addEventListener('pointerenter', () => { overStage = true; }); stage.addEventListener('pointerleave', () => { overStage = false; });
+    // колесо: с Ctrl (и щипок на тачпаде) — масштаб у курсора, без — сдвиг листа
+    stage.addEventListener('wheel', e => { if (!item || e.target.closest('.dr-layers')) return; e.preventDefault(); const p = spos(e), k = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? H : 1;
+      if (e.ctrlKey || e.metaKey) zoomAt(Math.exp(-e.deltaY * k * .0025), p[0], p[1]); else panBy(-e.deltaX * k, -e.deltaY * k); }, { passive: false });
+    stage.addEventListener('gesturestart', e => e.preventDefault()); // Safari: не масштабировать всю страницу
     new ResizeObserver(() => resize()).observe(stage);
-    document.addEventListener('keydown', e => { if (el.hidden || /input|textarea/i.test(document.activeElement?.tagName || '')) return; if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') { e.preventDefault(); e.shiftKey ? redo() : undo(); } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') { e.preventDefault(); redo(); } else if (e.key === 'Escape' && el.classList.contains('full')) full(false); });
+    document.addEventListener('keydown', e => { if (el.hidden || /input|textarea|select/i.test(document.activeElement?.tagName || '')) return;
+      if (e.key === ' ' && overStage) { e.preventDefault(); if (!spaceDown) { spaceDown = true; over.classList.add('grab'); } return; }
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') { e.preventDefault(); e.shiftKey ? redo() : undo(); } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') { e.preventDefault(); redo(); } else if (e.key === 'Escape' && el.classList.contains('full')) full(false); });
+    document.addEventListener('keyup', e => { if (e.key === ' ' && spaceDown) { spaceDown = false; over.classList.remove('grab'); } });
     document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement && el.classList.contains('full')) full(false, true); });
   }
   // ---------- состояние задания ----------
   const newLayer = (name) => ({ id: Math.random().toString(36).slice(2, 8), name, vis: true, objs: [] });
-  function state() { if (!item.draw) { const L = newLayer('Слой 1'); item.draw = { layers: [L], active: L.id, undo: [], redo: [] }; } return item.draw; }
+  function state() { if (!item.draw) { const L = newLayer('Слой 1'); item.draw = { layers: [L], active: L.id, undo: [], redo: [] }; } if (!item.draw.view) item.draw.view = { s: 1, x: 0, y: 0 }; return item.draw; }
   const layer = id => state().layers.find(l => l.id === (id || state().active));
+  const V = () => state().view;
   function mount() {
     const S = state(), box = $('.dr-cvs', el); box.innerHTML = ''; cv = S.layers.map(L => { const c = document.createElement('canvas'); c.className = 'dr-cv'; c.hidden = !L.vis; box.appendChild(c); return c; });
-    resize(true); renderLayers(); sync();
+    resize(true); syncView(); renderLayers(); sync();
   }
   function resize(force) {
     if (!el || el.hidden) return; const r = stage.getBoundingClientRect(), w = Math.max(10, Math.round(r.width)), hh = Math.max(10, Math.round(r.height));
@@ -3630,6 +3740,29 @@ const Draw = (() => {
     [...cv, over].forEach(c => { c.width = Math.round(W * dpr); c.height = Math.round(H * dpr); c.style.width = W + 'px'; c.style.height = H + 'px'; });
     renderAll();
   }
+  // ---------- условие: высота меняется перетаскиванием полоски и запоминается ----------
+  const QMIN = 56; let gd = null;
+  const panelH = () => el.getBoundingClientRect().height;
+  function qMax() { const used = $('.dr-meta', el).offsetHeight + $('.dr-tools', el).offsetHeight + $('.dr-grip', el).offsetHeight + 40; return Math.max(QMIN, panelH() - used - 150); } // листу — не меньше 150 px
+  function applyQH() { if (!el || el.hidden) return; const P = panelH(), f = (set.qf || 0) * P >= 110 ? set.qf : .38, hh = Math.round(Math.min(qMax(), Math.max(QMIN, f * P))); el.style.setProperty('--qh', hh + 'px'); }
+  function setFold(f) { el.classList.toggle('folded', f); const b = $('.dr-fold', el); b.textContent = f ? 'Показать условие' : 'Свернуть'; b.setAttribute('aria-expanded', String(!f)); if (!f) applyQH(); requestAnimationFrame(() => resize()); }
+  function setQH(px) { if (px < QMIN * .7) { if (!el.classList.contains('folded')) setFold(true); return; } if (el.classList.contains('folded')) setFold(false); const hh = Math.min(qMax(), Math.max(QMIN, px)); el.style.setProperty('--qh', hh + 'px'); if (hh >= 110) set.qf = hh / panelH(); }
+  function wireGrip() {
+    const g = $('.dr-grip', el), qh = () => (el.classList.contains('folded') ? 0 : $('.dr-q', el).getBoundingClientRect().height);
+    g.addEventListener('pointerdown', e => { e.preventDefault(); try { g.setPointerCapture(e.pointerId); } catch (x) { } gd = { y: e.clientY, h: qh(), f0: set.qf, moved: false }; g.classList.add('on'); });
+    g.addEventListener('pointermove', e => { if (!gd) return; const dy = e.clientY - gd.y; if (!gd.moved && Math.abs(dy) < 4) return; gd.moved = true; setQH(gd.h + dy); });
+    const end = () => { if (!gd) return; g.classList.remove('on'); if (gd.moved) { if (el.classList.contains('folded') && gd.f0) set.qf = gd.f0; saveSet(); } gd = null; resize(); };
+    g.addEventListener('pointerup', end); g.addEventListener('pointercancel', end);
+    g.addEventListener('dblclick', () => { set.qf = (set.qf || .38) < .55 ? .72 : .38; saveSet(); setFold(false); applyQH(); });
+    g.addEventListener('keydown', e => { if (e.key === 'ArrowUp' || e.key === 'ArrowDown') { e.preventDefault(); setQH(qh() + (e.key === 'ArrowDown' ? 40 : -40)); saveSet(); } else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setFold(!el.classList.contains('folded')); } });
+  }
+  // ---------- масштаб и сдвиг ----------
+  const clampZ = s => Math.min(ZMAX, Math.max(ZMIN, s));
+  function syncView() { if (!item) return; const v = V(); stage.style.backgroundSize = `${G * v.s}px ${G * v.s}px`; stage.style.backgroundPosition = `${v.x - 1}px ${v.y - 1}px`; $('.dr-zv', el).textContent = Math.round(v.s * 100) + '%'; }
+  function viewChanged() { if (vraf) return; vraf = requestAnimationFrame(() => { vraf = 0; syncView(); renderLayers(); placeEditor(); }); }
+  function zoomAt(f, sx, sy) { const v = V(), s = clampZ(v.s * f), k = s / v.s; v.x = sx - (sx - v.x) * k; v.y = sy - (sy - v.y) * k; v.s = Math.abs(s - 1) < .005 ? 1 : s; viewChanged(); }
+  function panBy(dx, dy) { const v = V(); v.x += dx; v.y += dy; viewChanged(); }
+  function resetView() { Object.assign(V(), { s: 1, x: 0, y: 0 }); viewChanged(); }
   // ---------- рисование объектов ----------
   function path(ctx, pts) { ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]); if (pts.length === 1) ctx.lineTo(pts[0][0] + .1, pts[0][1]); for (let i = 1; i < pts.length - 1; i++) { const m = [(pts[i][0] + pts[i + 1][0]) / 2, (pts[i][1] + pts[i + 1][1]) / 2]; ctx.quadraticCurveTo(pts[i][0], pts[i][1], m[0], m[1]); } if (pts.length > 1) ctx.lineTo(pts[pts.length - 1][0], pts[pts.length - 1][1]); }
   function shape(ctx, o) {
@@ -3646,50 +3779,125 @@ const Draw = (() => {
     ctx.save(); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
     if (o.t === 'eraser') { ctx.globalCompositeOperation = 'destination-out'; ctx.strokeStyle = '#000'; ctx.lineWidth = o.w * 4 + 6; path(ctx, o.pts); ctx.stroke(); }
     else if (o.t === 'pen' || o.t === 'marker') { ctx.strokeStyle = o.c; ctx.lineWidth = o.t === 'marker' ? o.w * 4 + 6 : o.w; if (o.t === 'marker') ctx.globalAlpha = .32; path(ctx, o.pts); ctx.stroke(); }
-    else if (o.t === 'text') { ctx.fillStyle = o.c; ctx.font = `${o.size}px "PT Serif", Georgia, serif`; ctx.textBaseline = 'top'; o.s.split('\n').forEach((ln, i) => ctx.fillText(ln, o.x, o.y + i * o.size * 1.25)); }
+    else if (o.t === 'text') { if (!o._hide) { ctx.fillStyle = o.c; ctx.font = tfont(o.size); ctx.textBaseline = 'top'; wrapLines(ctx, o).forEach((ln, i) => ctx.fillText(ln, o.x, o.y + i * lineH(o.size))); } }
     else if (o.t === 'img') { if (!o._img) { o._img = new Image(); o._img.onload = () => renderLayers(); o._img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(o.svg); } if (o._img.complete && o._img.naturalWidth) ctx.drawImage(o._img, o.x, o.y, o.w, o.h); }
     else { const closed = shape(ctx, o); if (closed && o.fill) { ctx.fillStyle = o.c; ctx.globalAlpha = .2; ctx.fill(); ctx.globalAlpha = 1; } ctx.strokeStyle = o.c; ctx.lineWidth = o.w; ctx.stroke();
       if (o.t === 'arrow') { const [x0, y0] = o.a, [x1, y1] = o.b, an = Math.atan2(y1 - y0, x1 - x0), L = 9 + o.w * 2; ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x1 - L * Math.cos(an - .45), y1 - L * Math.sin(an - .45)); ctx.moveTo(x1, y1); ctx.lineTo(x1 - L * Math.cos(an + .45), y1 - L * Math.sin(an + .45)); ctx.stroke(); } }
     ctx.restore();
   }
-  function renderLayer(i) { const c = cv[i], L = state().layers[i]; if (!c) return; const ctx = c.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H); L.objs.forEach(o => drawObj(ctx, o)); }
+  function renderLayer(i) { const c = cv[i], L = state().layers[i]; if (!c) return; const ctx = c.getContext('2d'), v = V(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, c.width, c.height); ctx.setTransform(dpr * v.s, 0, 0, dpr * v.s, dpr * v.x, dpr * v.y); L.objs.forEach(o => drawObj(ctx, o)); }
   function renderLayers() { if (item) state().layers.forEach((_, i) => renderLayer(i)); }
-  function renderAll() { if (!item) return; renderLayers(); const o = over.getContext('2d'); o.setTransform(dpr, 0, 0, dpr, 0, 0); o.clearRect(0, 0, W, H); }
-  // ---------- ввод ----------
-  const pos = e => { const r = over.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+  function renderAll() { if (!item) return; renderLayers(); const o = over.getContext('2d'); o.setTransform(1, 0, 0, 1, 0, 0); o.clearRect(0, 0, over.width, over.height); }
+  // ---------- ввод: один палец рисует, два — масштаб и сдвиг ----------
+  const spos = e => { const r = over.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+  const toW = p => { const v = V(); return [(p[0] - v.x) / v.s, (p[1] - v.y) / v.s]; };
+  const pos = e => toW(spos(e));
   const snapP = p => (set.snap && set.grid ? [Math.round(p[0] / G) * G, Math.round(p[1] / G) * G] : p);
+  function cancelCur() { if (!cur) return; const L = cur._L, i = L.objs.indexOf(cur); delete cur._L; if (i >= 0) L.objs.splice(i, 1); cur = null; curPid = null; renderLayer(state().layers.indexOf(L)); }
+  function startGesture() { const [a, b] = [...ptrs.values()]; gest = { d: Math.hypot(b[0] - a[0], b[1] - a[1]) || 1, m: [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2], v: Object.assign({}, V()) }; }
   function down(e) {
-    if (!item || e.button > 0) return; const L = layer(); if (!L.vis) { flash('Этот слой скрыт — включите его в списке слоёв.'); return; }
-    if (set.tool === 'text') { e.preventDefault(); textAt(snapP(pos(e))); return; }
-    over.setPointerCapture(e.pointerId); const p = pos(e), c = colorOf(set.color);
+    if (!item) return;
+    ptrs.set(e.pointerId, spos(e)); try { over.setPointerCapture(e.pointerId); } catch (x) { }
+    // нажатие мимо открытой надписи сначала только завершает её ввод
+    if (ed) { closeEditor(true); if (set.tool === 'text') { lockDraw = true; return; } }
+    if (ptrs.size >= 2) { cancelCur(); panP = null; over.classList.remove('panning'); lockDraw = true; startGesture(); return; }
+    if (lockDraw) return;
+    if (e.button === 1 || set.tool === 'hand' || spaceDown) { e.preventDefault(); panP = spos(e); over.classList.add('panning'); return; }
+    if (e.button > 0) return;
+    const L = layer(); if (!L.vis) { flash('Этот слой скрыт — включите его в списке слоёв.'); return; }
+    if (set.tool === 'text') { e.preventDefault(); const p = pos(e), hit = hitText(p); openEditor(hit ? [hit.x, hit.y] : snapP(p), hit); return; }
+    const p = pos(e), c = colorOf(set.color);
     cur = SHAPES.includes(set.tool) ? { t: set.tool, c, w: set.width, fill: set.fill, a: snapP(p), b: snapP(p) } : { t: set.tool, c, w: set.width, pts: [p] };
-    L.objs.push(cur); cur._L = L; schedule();
+    curPid = e.pointerId; L.objs.push(cur); cur._L = L; schedule();
   }
   function move(e) {
-    if (!cur) return; const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
+    if (!ptrs.has(e.pointerId)) return; ptrs.set(e.pointerId, spos(e));
+    if (gest) { if (ptrs.size >= 2) { const [a, b] = [...ptrs.values()], d = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1, m = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2], g = gest, v = V(), s = clampZ(g.v.s * d / g.d), wx = (g.m[0] - g.v.x) / g.v.s, wy = (g.m[1] - g.v.y) / g.v.s; v.s = s; v.x = m[0] - wx * s; v.y = m[1] - wy * s; viewChanged(); } return; }
+    if (panP) { const p = spos(e); panBy(p[0] - panP[0], p[1] - panP[1]); panP = p; return; }
+    if (!cur || e.pointerId !== curPid) return; let evs = e.getCoalescedEvents ? e.getCoalescedEvents() : []; if (!evs.length) evs = [e];
     if (cur.pts) evs.forEach(ev => cur.pts.push(pos(ev)));
     else { let b = snapP(pos(e)); if (e.shiftKey && (cur.t === 'line' || cur.t === 'arrow')) { const d = [b[0] - cur.a[0], b[1] - cur.a[1]], an = Math.round(Math.atan2(d[1], d[0]) / (Math.PI / 4)) * Math.PI / 4, l = Math.hypot(...d); b = [cur.a[0] + l * Math.cos(an), cur.a[1] + l * Math.sin(an)]; } else if (e.shiftKey && cur.t !== 'circle') { const s = Math.max(Math.abs(b[0] - cur.a[0]), Math.abs(b[1] - cur.a[1])); b = [cur.a[0] + Math.sign(b[0] - cur.a[0] || 1) * s, cur.a[1] + Math.sign(b[1] - cur.a[1] || 1) * s]; } cur.b = b; }
     schedule();
   }
-  function up() {
-    if (!cur) return; const o = cur, L = o._L; delete o._L; cur = null;
+  function up(e) {
+    ptrs.delete(e.pointerId);
+    if (gest) { if (ptrs.size >= 2) startGesture(); else gest = null; if (!ptrs.size) lockDraw = false; return; }
+    if (!ptrs.size) lockDraw = false;
+    if (panP) { if (!ptrs.size) { panP = null; over.classList.remove('panning'); } return; }
+    if (!cur || e.pointerId !== curPid) return; const o = cur, L = o._L; delete o._L; cur = null; curPid = null;
     const empty = o.pts ? false : Math.hypot(o.b[0] - o.a[0], o.b[1] - o.a[1]) < 3;
     if (empty) L.objs.splice(L.objs.indexOf(o), 1); else push({ k: 'add', lid: L.id, obj: o });
     renderLayer(state().layers.indexOf(L)); sync();
   }
   function schedule() { if (raf) return; raf = requestAnimationFrame(() => { raf = 0; const L = cur && cur._L; if (L) renderLayer(state().layers.indexOf(L)); }); }
-  function textAt(p) {
-    const ta = h('<textarea class="dr-text" rows="1" placeholder="Текст"></textarea>'); ta.style.left = p[0] + 'px'; ta.style.top = p[1] + 'px'; ta.style.color = colorOf(set.color); ta.style.fontSize = (14 + set.width * 2) + 'px'; stage.appendChild(ta); setTimeout(() => ta.focus(), 0);
-    let done = false; const commit = keep => { if (done) return; done = true; const s = ta.value.trim(); ta.remove(); if (keep && s) { const L = layer(), o = { t: 'text', c: colorOf(set.color), size: 14 + set.width * 2, x: p[0], y: p[1], s }; L.objs.push(o); push({ k: 'add', lid: L.id, obj: o }); renderLayer(state().layers.indexOf(L)); sync(); } };
-    ta.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); commit(true); } else if (e.key === 'Escape') commit(false); });
-    ta.addEventListener('blur', () => commit(true));
+  // ---------- надписи: ширина строки, перенос по словам, правка готового текста ----------
+  // Надпись хранит ширину строки wd (в координатах листа); строки получаются переносом по словам при каждой отрисовке.
+  let ed = null; const TP = [6, 4], TB = 1.5; // отступы и рамка поля ввода, px экрана
+  const tfont = size => `${size}px "PT Serif", Georgia, serif`, lineH = size => size * 1.25;
+  let mc = null; const mctx = () => mc || (mc = document.createElement('canvas').getContext('2d'));
+  function measure(ctx, s) { let m = null; try { m = ctx.measureText(s); } catch (x) { } if (m && typeof m.width === 'number') return m.width; const f = parseFloat(typeof ctx.font === 'string' ? ctx.font : '') || 16; return s.length * f * .55; }
+  function wrapLines(ctx, o) {
+    const out = [];
+    String(o.s).split('\n').forEach(par => {
+      if (!o.wd) { out.push(par); return; }
+      let line = '';
+      par.split(/(\s+)/).forEach(tok => {
+        if (!tok) return;
+        if (!line || measure(ctx, (line + tok).trimEnd()) <= o.wd) line += tok;
+        else { out.push(line.trimEnd()); line = /^\s+$/.test(tok) ? '' : tok; }
+        while (line.length > 1 && measure(ctx, line.trimEnd()) > o.wd) { let k = line.length - 1; while (k > 1 && measure(ctx, line.slice(0, k)) > o.wd) k--; out.push(line.slice(0, k)); line = line.slice(k); }
+      });
+      out.push(line.trimEnd());
+    });
+    return out;
   }
-  // ---------- история ----------
+  function textBox(o) { const c = mctx(); c.font = tfont(o.size); const ls = wrapLines(c, o), w = o.wd || Math.max(0, ...ls.map(l => measure(c, l))); return [o.x, o.y, o.x + Math.max(w, o.size), o.y + Math.max(1, ls.length) * lineH(o.size)]; }
+  function hitText(p) { const L = layer(); for (let i = L.objs.length - 1; i >= 0; i--) { const o = L.objs[i]; if (o.t !== 'text') continue; const b = textBox(o); if (p[0] >= b[0] - 8 && p[0] <= b[2] + 8 && p[1] >= b[1] - 8 && p[1] <= b[3] + 8) return o; } return null; }
+  function openEditor(p, o) {
+    closeEditor(true);
+    const v = V(), L = layer(), size = o ? o.size : 14 + set.width * 2, color = o ? o.c : colorOf(set.color), sx = p[0] * v.s + v.x;
+    const wd = o ? (o.wd || Math.max(60, textBox(o)[2] - o.x)) : Math.max(120, Math.min(W - sx - 22, 440)) / v.s;
+    const box = h(`<div class="dr-ted"><div class="dr-twrap"><textarea class="dr-text" rows="1" placeholder="Текст" aria-label="Надпись на листе"></textarea><span class="dr-tw" title="Ширина строки — потяните" aria-hidden="true"></span></div><div class="dr-tbar"><button type="button" class="dr-tok">Готово</button><button type="button" class="dr-tno">${o ? 'Отменить правку' : 'Отмена'}</button><span class="small">Enter — новая строка</span></div></div>`);
+    const ta = $('textarea', box); ta.value = o ? o.s : ''; ta.style.color = color; stage.appendChild(box);
+    ed = { p, wd, o, L, size, color, box, ta, hold: false }; stage.classList.add('editing');
+    if (o) { o._hide = true; renderLayer(state().layers.indexOf(L)); }
+    placeEditor();
+    ta.addEventListener('input', fitEditor);
+    ta.addEventListener('keydown', e => { if (e.key === 'Escape') { e.preventDefault(); closeEditor(false); } else if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); closeEditor(true); } });
+    ta.addEventListener('blur', () => setTimeout(() => { if (ed && ed.ta === ta && !ed.hold && document.activeElement !== ta) closeEditor(true); }, 150));
+    box.querySelectorAll('.dr-tbar button').forEach(b => b.addEventListener('pointerdown', e => { e.preventDefault(); if (ed) ed.hold = true; }));
+    $('.dr-tok', box).addEventListener('click', () => closeEditor(true));
+    $('.dr-tno', box).addEventListener('click', () => closeEditor(false));
+    const tw = $('.dr-tw', box); let w0 = null;
+    tw.addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); try { tw.setPointerCapture(e.pointerId); } catch (x) { } if (ed) { ed.hold = true; w0 = { x: e.clientX, wd: ed.wd }; } });
+    tw.addEventListener('pointermove', e => { if (!w0 || !ed) return; ed.wd = Math.max(40 / V().s, w0.wd + (e.clientX - w0.x) / V().s); placeEditor(); });
+    const twEnd = () => { if (!w0) return; w0 = null; if (ed) { ed.hold = false; ed.ta.focus(); } }; tw.addEventListener('pointerup', twEnd); tw.addEventListener('pointercancel', twEnd);
+    setTimeout(() => { if (!ed || ed.ta !== ta) return; ta.focus({ preventScroll: true }); ta.setSelectionRange(ta.value.length, ta.value.length); keepVisible(); }, 0);
+  }
+  function placeEditor() { if (!ed) return; const v = V(), x = ed.p[0] * v.s + v.x, y = ed.p[1] * v.s + v.y;
+    ed.box.style.left = (x - TP[0] - TB) + 'px'; ed.box.style.top = (y - TP[1] - TB) + 'px';
+    ed.ta.style.fontSize = ed.size * v.s + 'px'; ed.ta.style.lineHeight = lineH(ed.size) * v.s + 'px'; ed.ta.style.width = (ed.wd * v.s + 2 * (TP[0] + TB)) + 'px'; fitEditor(); }
+  function fitEditor() { if (!ed) return; const ta = ed.ta; ta.style.height = 'auto'; ta.style.height = (ta.scrollHeight + 2 * TB) + 'px'; }
+  // на телефоне клавиатура закрывает низ экрана: сдвигаем лист, чтобы надпись осталась видна
+  function keepVisible() { if (!ed) return; const vv = window.visualViewport, r = ed.box.getBoundingClientRect(), sr = stage.getBoundingClientRect(); let bottom = sr.bottom; if (vv) bottom = Math.min(bottom, vv.offsetTop + vv.height);
+    const over = r.bottom + 10 - bottom; if (over > 0) panBy(0, -Math.min(over, Math.max(0, r.top - sr.top - 10))); }
+  function closeEditor(keep) {
+    if (!ed) return; const E = ed, { o, L } = E, s = E.ta.value.replace(/\s+$/, ''); ed = null; E.box.remove(); stage.classList.remove('editing');
+    if (!item || !state().layers.includes(L)) return;
+    if (o) { delete o._hide;
+      if (keep && !s.trim()) { const at = L.objs.indexOf(o); if (at >= 0) { L.objs.splice(at, 1); push({ k: 'del', lid: L.id, obj: o, at }); } }
+      else if (keep && (s !== o.s || E.wd !== o.wd)) { push({ k: 'edit', lid: L.id, obj: o, from: { s: o.s, wd: o.wd }, to: { s, wd: E.wd } }); o.s = s; o.wd = E.wd; }
+    } else if (keep && s.trim()) { const n = { t: 'text', c: E.color, size: E.size, x: E.p[0], y: E.p[1], wd: E.wd, s }; L.objs.push(n); push({ k: 'add', lid: L.id, obj: n }); }
+    renderLayer(state().layers.indexOf(L)); sync();
+  }
+  // ---------- история действий ----------
   function push(a) { const S = state(); S.undo.push(a); if (S.undo.length > 200) S.undo.shift(); S.redo = []; }
   function apply(a, back) {
     const S = state(), L = S.layers.find(l => l.id === a.lid);
     if (a.k === 'add' && L) { if (back) L.objs.splice(L.objs.lastIndexOf(a.obj), 1); else L.objs.push(a.obj); }
     if (a.k === 'clear' && L) L.objs = back ? a.objs.slice() : [];
+    if (a.k === 'edit') { const t = back ? a.from : a.to; a.obj.s = t.s; a.obj.wd = t.wd; }
+    if (a.k === 'del' && L) { if (back) L.objs.splice(Math.min(a.at, L.objs.length), 0, a.obj); else { const i = L.objs.indexOf(a.obj); if (i >= 0) L.objs.splice(i, 1); } }
     if (a.k === 'dellayer') { if (back) S.layers.splice(a.at, 0, a.layer); else S.layers.splice(S.layers.indexOf(a.layer), 1); if (!S.layers.some(l => l.id === S.active)) S.active = S.layers[Math.min(a.at, S.layers.length - 1)].id; mount(); return; }
     renderLayers(); sync();
   }
@@ -3705,15 +3913,26 @@ const Draw = (() => {
   }
   function insertFig() {
     const f = figSvg(); if (!f) { flash('У этого задания нет рисунка — начертите его сами.'); return; }
-    const S = state(), sc = Math.min(1.4, (W - 40) / f.w, (H - 40) / f.h), w = f.w * sc, hh = f.h * sc, L = newLayer('Рисунок задачи');
-    L.objs.push({ t: 'img', svg: f.svg, x: Math.round((W - w) / 2), y: 20, w, h: hh }); S.layers.unshift(L); mount(); flash('Рисунок добавлен на отдельный нижний слой.');
+    const S = state(), v = V(), vw = W / v.s, vh = H / v.s, vx = -v.x / v.s, vy = -v.y / v.s, sc = Math.min(1.4, (vw - 40) / f.w, (vh - 40) / f.h), w = f.w * sc, hh = f.h * sc, L = newLayer('Рисунок задачи');
+    L.objs.push({ t: 'img', svg: f.svg, x: Math.round(vx + (vw - w) / 2), y: Math.round(vy + 20), w, h: hh }); S.layers.unshift(L); mount(); flash('Рисунок добавлен на отдельный нижний слой.');
   }
-  // ---------- сохранение ----------
+  // ---------- сохранение: весь рисунок целиком, при любом масштабе ----------
+  function bbox() {
+    let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity; const ext = (a, b, c, d) => { x0 = Math.min(x0, a); y0 = Math.min(y0, b); x1 = Math.max(x1, c); y1 = Math.max(y1, d); };
+    state().layers.forEach(L => { if (!L.vis) return; L.objs.forEach(o => {
+      if (o.pts) { const p2 = (o.t === 'pen' ? o.w : o.w * 4 + 6) / 2 + 2; o.pts.forEach(p => ext(p[0] - p2, p[1] - p2, p[0] + p2, p[1] + p2)); }
+      else if (o.t === 'text') { const b = textBox(o); ext(b[0], b[1], b[2] + 4, b[3] + 4); }
+      else if (o.t === 'img') ext(o.x, o.y, o.x + o.w, o.y + o.h);
+      else if (o.a) { const p2 = o.w + 12; if (o.t === 'circle') { const r = Math.hypot(o.b[0] - o.a[0], o.b[1] - o.a[1]); ext(o.a[0] - r - p2, o.a[1] - r - p2, o.a[0] + r + p2, o.a[1] + r + p2); } else ext(Math.min(o.a[0], o.b[0]) - p2, Math.min(o.a[1], o.b[1]) - p2, Math.max(o.a[0], o.b[0]) + p2, Math.max(o.a[1], o.b[1]) + p2); }
+    }); });
+    return [Math.floor(Math.min(0, x0 - 16)), Math.floor(Math.min(0, y0 - 16)), Math.ceil(Math.max(W, x1 + 16)), Math.ceil(Math.max(H, y1 + 16))];
+  }
   async function savePng() {
-    if (!DL) return; const c = document.createElement('canvas'); c.width = Math.round(W * dpr); c.height = Math.round(H * dpr); const ctx = c.getContext('2d');
+    if (!DL) return; const [bx0, by0, bx1, by1] = bbox(), bw = bx1 - bx0, bh = by1 - by0, k = Math.min(dpr, 4096 / bw, 4096 / bh);
+    const c = document.createElement('canvas'); c.width = Math.round(bw * k); c.height = Math.round(bh * k); const ctx = c.getContext('2d');
     ctx.fillStyle = css('--sheet') || '#fff'; ctx.fillRect(0, 0, c.width, c.height);
-    if (set.grid) { ctx.strokeStyle = css('--grid') || '#e6eaf3'; ctx.lineWidth = dpr; for (let x = G; x < W; x += G) { ctx.beginPath(); ctx.moveTo(x * dpr, 0); ctx.lineTo(x * dpr, c.height); ctx.stroke(); } for (let y = G; y < H; y += G) { ctx.beginPath(); ctx.moveTo(0, y * dpr); ctx.lineTo(c.width, y * dpr); ctx.stroke(); } }
-    cv.forEach((x, i) => { if (state().layers[i].vis) ctx.drawImage(x, 0, 0); });
+    if (set.grid) { ctx.strokeStyle = css('--grid') || '#e6eaf3'; ctx.lineWidth = Math.max(1, k); for (let x = Math.ceil(bx0 / G) * G; x < bx1; x += G) { ctx.beginPath(); ctx.moveTo((x - bx0) * k, 0); ctx.lineTo((x - bx0) * k, c.height); ctx.stroke(); } for (let y = Math.ceil(by0 / G) * G; y < by1; y += G) { ctx.beginPath(); ctx.moveTo(0, (y - by0) * k); ctx.lineTo(c.width, (y - by0) * k); ctx.stroke(); } }
+    state().layers.forEach(L => { if (!L.vis) return; const lc = document.createElement('canvas'); lc.width = c.width; lc.height = c.height; const lx = lc.getContext('2d'); lx.setTransform(k, 0, 0, k, -bx0 * k, -by0 * k); L.objs.forEach(o => drawObj(lx, o)); ctx.drawImage(lc, 0, 0); });
     c.toBlob(async b => { try { await DL.save({ filename: `черновик-${item.sid}-${item.n}.png`, data: b }); flash('Картинка сохранена.'); } catch (e) { if (e && e.code !== 'declined') flash('Сохранить не получилось.'); } }, 'image/png');
   }
   // ---------- панель ----------
@@ -3735,13 +3954,14 @@ const Draw = (() => {
   }
   function onClick(e) {
     const b = e.target.closest('button'); if (!b || !el.contains(b)) return;
-    if (b.dataset.tool) { set.tool = b.dataset.tool; saveSet(); sync(); return; }
+    if (b.dataset.tool) { set.tool = b.dataset.tool; saveSet(); sync(); if (set.tool === 'text') flash('Нажмите на лист, чтобы написать. Нажмите на надпись, чтобы исправить её.'); return; }
     if (b.dataset.color) { set.color = b.dataset.color; saveSet(); sync(); return; }
     if (b.dataset.tg) { set[b.dataset.tg] = !set[b.dataset.tg]; saveSet(); sync(); return; }
     const S = item && state(), act = b.dataset.act, la = b.dataset.la;
     if (act === 'undo') undo(); else if (act === 'redo') redo();
     else if (act === 'clear') { const L = layer(); if (L.objs.length) { push({ k: 'clear', lid: L.id, objs: L.objs.slice() }); L.objs = []; renderLayers(); sync(); } }
-    else if (act === 'fig') insertFig(); else if (act === 'save') savePng(); else if (act === 'close') close();
+    else if (act === 'fig') insertFig(); else if (act === 'save') savePng(); else if (act === 'close') reqClose();
+    else if (act === 'zin') zoomAt(1.25, W / 2, H / 2); else if (act === 'zout') zoomAt(.8, W / 2, H / 2); else if (act === 'zreset') resetView();
     else if (act === 'full') full(!el.classList.contains('full'));
     else if (act === 'layers') { const p = $('.dr-layers', el); p.hidden = !p.hidden; b.setAttribute('aria-pressed', String(!p.hidden)); }
     else if (act === 'addlayer') { if (S.layers.length >= 8) { flash('Не больше 8 слоёв.'); return; } const L = newLayer('Слой ' + (S.layers.length + 1)); S.layers.push(L); S.active = L.id; mount(); }
@@ -3752,15 +3972,16 @@ const Draw = (() => {
       else if (la === 'down' && i > 0) { [S.layers[i], S.layers[i - 1]] = [S.layers[i - 1], S.layers[i]]; mount(); }
       else if (la === 'del' && S.layers.length > 1) { push({ k: 'dellayer', layer: L, at: i }); S.layers.splice(i, 1); if (S.active === id) S.active = S.layers[Math.max(0, i - 1)].id; mount(); } }
   }
+  function resetInput() { cancelCur(); ptrs.clear(); gest = null; panP = null; lockDraw = false; if (over) over.classList.remove('panning'); }
   function open(it, card) {
-    if (!el) build(); if (cardEl) { cardEl.classList.remove('drawing'); $('.pencil', cardEl)?.setAttribute('aria-pressed', 'false'); }
+    if (!el) build(); if (item) { closeEditor(true); resetInput(); } if (cardEl) { cardEl.classList.remove('drawing'); $('.pencil', cardEl)?.setAttribute('aria-pressed', 'false'); }
     item = it; cardEl = card; card.classList.add('drawing'); $('.pencil', card)?.setAttribute('aria-pressed', 'true');
     const T = EGE[it.sid].tasks[it.n]; el.setAttribute('data-hue', it.sid); $('.dr-no', el).textContent = it.n; $('.dr-lbl', el).textContent = `${T.t} · условие`;
-    const q = $('.dr-q', el); q.innerHTML = it.o.q + (it.o.fig ? `<div class="dr-fig">${it.o.fig}</div>` : ''); typeset(q);
-    el.hidden = false; document.body.classList.add('split'); mount(); requestAnimationFrame(() => { resize(true); card.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); });
+    const q = $('.dr-q', el); q.innerHTML = it.o.q + (it.o.fig ? `<div class="dr-fig">${it.o.fig}</div>` : ''); q.scrollTop = 0; typeset(q);
+    el.hidden = false; document.body.classList.add('split'); applyQH(); mount(); requestAnimationFrame(() => { resize(true); card.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); });
   }
-  function close() { if (!el || el.hidden) return; if (el.classList.contains('full')) full(false); el.hidden = true; document.body.classList.remove('split'); if (cardEl) { cardEl.classList.remove('drawing'); $('.pencil', cardEl)?.setAttribute('aria-pressed', 'false'); } item = null; cardEl = null; }
-  return { open, close, isOpenFor: it => !!el && !el.hidden && item === it, icon: n => ico(n) };
+  function close() { if (!el || el.hidden) return; closeEditor(true); resetInput(); if (el.classList.contains('full')) full(false); el.hidden = true; document.body.classList.remove('split'); if (cardEl) { cardEl.classList.remove('drawing'); $('.pencil', cardEl)?.setAttribute('aria-pressed', 'false'); cardEl.scrollIntoView({ block: 'nearest' }); } item = null; cardEl = null; }
+  return Object.assign(api, { open, close, isOpen: () => !!el && !el.hidden, isOpenFor: it => !!el && !el.hidden && item === it, icon: n => ico(n) });
 })();
 
 // ===== Интерфейс тренажёра =====
@@ -3789,24 +4010,69 @@ function typeset(el) { const MJ = window.MathJax; if (MJ && MJ.typesetPromise) m
 window.__mjReady = () => document.querySelectorAll('[data-tex="wait"]').forEach(el => { el.removeAttribute('data-tex'); typeset(el); });
 
 // ---------- шапка и меню предметов ----------
+const ICLOCK = '<svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="M10 6v4.3l2.8 1.8"/></svg>';
 function header(active) {
   const nav = $('.top .tabs'), S = active && EGE[active];
   nav.innerHTML = (S ? `<button class="tab cur" data-hue="${active}" data-go="${active}"><i></i>${S.short}</button>` : '') +
+    `<button class="tab htab" data-go="history" aria-label="История решений"${active === 'history' ? ' aria-current="page"' : ''}>${ICLOCK}<span>История</span></button>` +
     `<details class="smenu"><summary class="tab">Предметы <span aria-hidden="true">▾</span></summary><div class="smenu-list">${GROUPS.map(([g, ids]) => { const ok = ids.filter(id => EGE[id]); return ok.length ? `<div class="smg"><span class="eyebrow">${g}</span>${ok.map(id => `<button class="smi" data-hue="${id}" data-go="${id}" ${id === active ? 'aria-current="page"' : ''}><i></i>${EGE[id].name}</button>`).join('')}</div>` : ''; }).join('')}</div></details>`;
   setHH();
 }
 const setHH = () => document.documentElement.style.setProperty('--hh', $('.top').offsetHeight + 'px');
-document.addEventListener('click', e => { const b = e.target.closest('[data-go]'); if (b) { e.preventDefault(); route(b.dataset.go); }
+document.addEventListener('click', e => { const b = e.target.closest('[data-go]'); if (b) { e.preventDefault(); route(b.dataset.go, { sid: b.dataset.sid }); }
   const sc = e.target.closest('[data-scroll]'), tg = sc && document.getElementById(sc.dataset.scroll);
   if (tg) { let rm = false; try { rm = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (x) { } tg.scrollIntoView({ behavior: rm ? 'auto' : 'smooth', block: 'start' }); } const m = $('.smenu[open]'); if (m && !e.target.closest('.smenu')) m.open = false; });
 window.addEventListener('resize', setHH);
-function route(to) {
-  closeSheet(); Draw.close(); const m = $('.smenu'); if (m) m.open = false;
-  if (SUBJ.includes(to)) { try { history.replaceState(null, '', '#' + to); } catch (e) { location.hash = to; } renderSubject(to); }
-  else { try { history.replaceState(null, '', location.pathname + location.search); } catch (e) { } renderHome(); }
-  window.scrollTo(0, 0);
+// ---------- переходы и кнопка «Назад» ----------
+// Каждый экран (главная, предмет, задания, история) и каждая панель поверх (черновик, выбор количества)
+// получает свою запись в истории браузера: системная кнопка «Назад» закрывает панель или возвращает на прошлый экран.
+let VIEW = { v: 'home', sid: null, pid: null }, PID = 0; const STASH = new Map();
+try { history.scrollRestoration = 'manual'; } catch (e) { }
+const viewUrl = st => (st.v === 'home' ? location.pathname + location.search : '#' + (st.v === 'hist' ? 'history' : st.sid));
+const sameView = (a, b) => a.v === b.v && (a.sid ?? null) === (b.sid ?? null) && (a.pid ?? null) === (b.pid ?? null);
+function setState(st, replace) {
+  st = { v: st.v, sid: st.sid ?? null, pid: st.pid ?? null };
+  const top = history.state, rep = replace || (top && top.ov) || sameView(st, VIEW);
+  try { history[rep ? 'replaceState' : 'pushState'](st, '', viewUrl(st)); } catch (e) { }
+  VIEW = st;
 }
-window.addEventListener('hashchange', () => { const x = location.hash.slice(1); if (SUBJ.includes(x)) renderSubject(x); });
+function pushOverlay(ov) { try { history.pushState(Object.assign({}, VIEW, { ov }), '', location.href); } catch (e) { } }
+function popOverlay(ov, hide) { if (history.state && history.state.ov === ov) { try { history.back(); return; } catch (e) { } } hide(); }
+// уходя с набора заданий, сохраняем его целиком — «Назад»/«Вперёд» вернут ответы и черновики
+function stashPractice() {
+  if (VIEW.v !== 'prac' || !current || current.pid !== VIEW.pid || !app.firstChild) return;
+  const f = document.createDocumentFragment(); while (app.firstChild) f.appendChild(app.firstChild);
+  STASH.set(current.pid, { f, cur: current, y: window.scrollY }); if (STASH.size > 4) STASH.delete(STASH.keys().next().value);
+}
+function restorePractice(pid) {
+  const p = STASH.get(pid); if (!p) return false; STASH.delete(pid);
+  current = p.cur; header(current.sid); app.setAttribute('data-hue', current.sid); app.replaceChildren(p.f);
+  setMode(MODE, true); setHH(); requestAnimationFrame(() => window.scrollTo(0, p.y)); return true;
+}
+function route(to, opt = {}) {
+  closeSheet(true); Draw.close(); const m = $('.smenu'); if (m) m.open = false; stashPractice();
+  let st;
+  if (SUBJ.includes(to)) { st = { v: 'subj', sid: to }; renderSubject(to); }
+  else if (to === 'history') { st = { v: 'hist', sid: opt.sid && EGE[opt.sid] ? opt.sid : null }; renderHistory(st.sid); }
+  else { st = { v: 'home' }; renderHome(); }
+  setState(st, opt.replace); window.scrollTo(0, 0);
+}
+window.addEventListener('popstate', e => {
+  const st = e.state;
+  if (!st || !st.v) { const x = location.hash.slice(1); route(SUBJ.includes(x) || x === 'history' ? x : 'home', { replace: true }); return; }
+  if (!st.ov) { if (Draw.isOpen()) Draw.close(); if (!sheet.hidden) closeSheet(true); }
+  const base = { v: st.v, sid: st.sid ?? null, pid: st.pid ?? null };
+  if (sameView(base, VIEW)) { if (st.ov) { try { history.replaceState(base, '', location.href); } catch (x) { } } return; }
+  closeSheet(true); Draw.close(); const m = $('.smenu'); if (m) m.open = false; stashPractice();
+  if (base.v === 'prac' && restorePractice(base.pid)) { VIEW = base; if (st.ov) { try { history.replaceState(base, '', location.href); } catch (x) { } } return; }
+  if (base.v === 'prac') { base.v = 'subj'; base.pid = null; }
+  if (base.v === 'subj' && SUBJ.includes(base.sid)) renderSubject(base.sid);
+  else if (base.v === 'hist') renderHistory(base.sid);
+  else { base.v = 'home'; base.sid = null; renderHome(); }
+  VIEW = base; try { history.replaceState(base, '', viewUrl(base)); } catch (x) { } window.scrollTo(0, 0);
+});
+// адрес поменяли вручную (без нашей записи в истории)
+window.addEventListener('hashchange', () => { if (history.state && history.state.v) return; const x = location.hash.slice(1); route(SUBJ.includes(x) || x === 'history' ? x : 'home', { replace: true }); });
 
 // ---------- главная ----------
 const FMR = 'https://doc.fipi.ru/navigator-podgotovki/navigator-ege/', SYN = 'https://synergy.ru/edu/ege/';
@@ -3886,7 +4152,7 @@ function renderSubject(sid) {
   else { const p1 = all.filter(T => T.part !== 2), p2 = all.filter(T => T.part === 2);
     parts = p2.length ? `<div class="parthead">Часть 1 · задания ${p1[0].n}–${p1[p1.length - 1].n}</div><div class="tiles">${p1.map(tile).join('')}</div><div class="parthead">Часть 2 · ${S.part2 || 'развёрнутый ответ'}</div><div class="tiles">${p2.map(tile).join('')}</div>` : `<div class="tiles">${all.map(tile).join('')}</div>`; }
   app.innerHTML = `<section class="wrap shead"><div class="eyebrow">ЕГЭ-2026 · ${S.n} ${plural(S.n, 'задание', 'задания', 'заданий')}</div><h1><em>${S.name}</em></h1><p class="lead">${S.intro}</p>
-    <div class="row"><button class="btn primary" id="variant">Вариант целиком: по одному примеру каждого номера</button><a class="btn ghost" href="${S.bank || 'https://ege.fipi.ru/bank/'}" target="_blank" rel="noopener">Банк ФИПИ ↗</a></div></section>
+    <div class="row"><button class="btn primary" id="variant">Вариант целиком: по одному примеру каждого номера</button><button class="btn ghost" data-go="history" data-sid="${sid}">История по предмету</button><a class="btn ghost" href="${S.bank || 'https://ege.fipi.ru/bank/'}" target="_blank" rel="noopener">Банк ФИПИ ↗</a></div></section>
     <section class="wrap">${parts}</section><div style="padding-bottom:110px">${footer(true)}</div>`;
   app.querySelectorAll('.tile').forEach(b => b.addEventListener('click', () => openSheet(sid, +b.dataset.n)));
   $('#variant').addEventListener('click', () => startPractice(sid, all.map(T => ({ n: T.n, k: 1 })), 'Вариант целиком'));
@@ -3901,7 +4167,7 @@ function openSheet(sid, n) {
   $('#shNote').textContent = T.pool ? `В банке ${T.pool} ${plural(T.pool, 'вариант', 'варианта', 'вариантов')} этого номера.` : T.part === 2 && T.mode !== 'auto' ? 'Задание с развёрнутым ответом: решите и сверьтесь с образцом.' : T.file ? 'К заданию прилагается файл с данными.' : T.audio ? 'Текст для аудирования читает голосовой синтезатор браузера.' : 'Каждый пример генерируется заново.';
   const tb = $('#shTopics'); selTopics = T.topics ? new Set(T.topics.map((_, i) => i)) : null; tb.hidden = !T.topics;
   tb.innerHTML = T.topics ? '<span class="small">Темы:</span><button class="chip tchip" data-all="1">Все темы</button>' + T.topics.map((x, i) => `<button class="chip tchip" data-t="${i}">${x}</button>`).join('') : '';
-  syncTopics(); setCount(sheetCount); sheet.hidden = false; $('#shGo').focus();
+  const was = sheet.hidden; syncTopics(); setCount(sheetCount); sheet.hidden = false; if (was) pushOverlay('sheet'); $('#shGo').focus();
 }
 function syncTopics() { if (!selTopics) return; const T = EGE[sel.sid].tasks[sel.n], all = selTopics.size === T.topics.length;
   sheet.querySelectorAll('.tchip').forEach(c => c.setAttribute('aria-pressed', String(c.dataset.all ? all : !all && selTopics.has(+c.dataset.t)))); }
@@ -3910,10 +4176,11 @@ $('#shTopics').addEventListener('click', e => { const c = e.target.closest('.tch
   else { const i = +c.dataset.t; if (all) selTopics = new Set([i]); else if (selTopics.has(i)) { selTopics.delete(i); if (!selTopics.size) selTopics = new Set(T.topics.map((_, j) => j)); } else selTopics.add(i); }
   syncTopics(); });
 function setCount(k) { sheetCount = Math.max(1, Math.min(50, k | 0 || 1)); sheet.querySelectorAll('.chip[data-k]').forEach(c => c.setAttribute('aria-pressed', String(+c.dataset.k === sheetCount))); $('#shCustom').value = sheetCount; }
-function closeSheet() { sheet.hidden = true; app.querySelectorAll('.tile').forEach(b => b.setAttribute('aria-pressed', 'false')); }
+// silent — просто спрятать (при переходе на другой экран); без него — закрыть через историю, как кнопкой «Назад»
+function closeSheet(silent) { if (!silent && !sheet.hidden) return popOverlay('sheet', () => closeSheet(true)); sheet.hidden = true; app.querySelectorAll('.tile').forEach(b => b.setAttribute('aria-pressed', 'false')); }
 sheet.querySelectorAll('.chip[data-k]').forEach(c => c.addEventListener('click', () => setCount(+c.dataset.k)));
 $('#shCustom').addEventListener('input', e => setCount(+e.target.value));
-$('#shClose').addEventListener('click', closeSheet);
+$('#shClose').addEventListener('click', () => closeSheet());
 $('#shGo').addEventListener('click', () => { if (!sel) return; const T = EGE[sel.sid].tasks[sel.n], tp = selTopics && selTopics.size < T.topics.length ? [...selTopics].sort((a, b) => a - b) : null; startPractice(sel.sid, [{ n: sel.n, k: sheetCount, topics: tp }]); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && !sheet.hidden) closeSheet(); });
 
@@ -3923,10 +4190,10 @@ function build(sid, plan) {
   for (const { n, k, topics } of plan) {
     const T = EGE[sid].tasks[n], seen = new Set(); let tries = 0, got = 0; TOPIC = topics || null;
     while (got < k && tries < k * 15 + 30) {
-      tries++; let o; LAST_SUB = null; try { o = T.gen(); } catch (e) { console.error(e); continue; }
+      tries++; let o; LAST_SUB = null; const seed = newSeed(); try { o = withSeed(seed, () => T.gen()); } catch (e) { console.error(e); continue; }
       if (!o) continue; const key = o.q + '|' + JSON.stringify(o.a ?? o.fields ?? o.show);
       if (seen.has(key)) continue; seen.add(key);
-      const tp = LAST_SUB ?? (topics && topics.length === 1 ? topics[0] : null); out.push({ sid, n, o, topic: T.topics && tp != null && tp < T.topics.length ? tp : null }); got++;
+      const tp = LAST_SUB ?? (topics && topics.length === 1 ? topics[0] : null); out.push({ sid, n, o, seed, tp: topics || null, topic: T.topics && tp != null && tp < T.topics.length ? tp : null }); got++;
     }
     TOPIC = null;
     if (got < k) notes.push(`Задание ${n}: ${topics ? 'по выбранным темам' : 'в банке'} ${got} ${plural(got, 'вариант', 'варианта', 'вариантов')}, показаны все.`);
@@ -3942,9 +4209,10 @@ function videoLinks(it) {
 
 // ---------- набор задач ----------
 let current = null;
-function startPractice(sid, plan, label) {
-  closeSheet(); Draw.close(); const { out, notes } = build(sid, plan); const S = EGE[sid];
-  current = { sid, plan, label, finished: false, items: out.map(x => Object.assign(x, { state: null, pending: null })) };
+// pre — готовый набор (повтор из истории); иначе задания генерируются по плану
+function startPractice(sid, plan, label, pre) {
+  closeSheet(true); Draw.close(); stashPractice(); const { out, notes } = pre || build(sid, plan); const S = EGE[sid];
+  current = { pid: ++PID, sid, plan, label, finished: false, items: out.map(x => Object.assign(x, { state: null, pending: null })) };
   header(sid); app.setAttribute('data-hue', sid);
   const tp = !label && plan[0].topics ? EGE[sid].tasks[plan[0].n].topics.filter((_, i) => plan[0].topics.includes(i)) : null;
   const title = label ? `${S.name} · <em>${label}</em>` : `${S.name} · <em>задание ${plan[0].n}</em>${tp ? `<small class="ptopics">${esc(tp.join(', '))}</small>` : ''}`;
@@ -3955,8 +4223,9 @@ function startPractice(sid, plan, label) {
   current.items.forEach((it, i) => list.appendChild(card(it, i, current.items.length)));
   app.querySelectorAll('[data-mode]').forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
   $('#checkAll').addEventListener('click', () => { if (MODE === 'end' && !current.finished) finish(); else current.items.forEach(it => it.check && it.state === null && it.filled() && it.check()); });
-  $('#again').addEventListener('click', () => startPractice(sid, plan, label));
+  $('#again').addEventListener('click', () => startPractice(sid, plan, pre ? (plan.length > 1 ? 'Похожие задания' : null) : label));
   setMode(MODE, true); score(); typeset(list); window.scrollTo(0, 0); setHH();
+  setState({ v: 'prac', sid, pid: current.pid });
 }
 function setMode(m, init) {
   const prev = MODE; MODE = m; try { localStorage.setItem('ege26:mode', m); } catch (e) { }
@@ -4007,7 +4276,7 @@ function card(it, i, total) {
   if (o.fig) body.appendChild(h(`<div class="fig"><div class="figure-plot">${o.fig}</div></div>`));
   (o.data || []).forEach(f => body.appendChild(fileBlock(f)));
   const pen = h(`<button class="pencil" type="button" aria-pressed="false" aria-label="Черновик: рисовать к заданию ${i + 1}" title="Черновик для рисования">${Draw.icon('pen')}</button>`);
-  pen.addEventListener('click', () => Draw.isOpenFor(it) ? Draw.close() : Draw.open(it, el)); el.appendChild(pen);
+  pen.addEventListener('click', () => { if (Draw.isOpenFor(it)) closeDraw(); else { const was = Draw.isOpen(); Draw.open(it, el); if (!was) pushOverlay('draw'); } }); el.appendChild(pen);
   const ans = h('<div class="ans"></div>'); body.appendChild(ans);
   if (o.mode === 'self') {
     if (o.essay) { const ta = h('<textarea class="essay" placeholder="Пишите здесь. Текст остаётся только на этом экране."></textarea>'), wc = h('<span class="small">0 слов</span>'), min = o.essay.min || 150;
@@ -4019,7 +4288,7 @@ function card(it, i, total) {
     btn.addEventListener('click', () => {
       acts.remove(); const rv = h(`<div><div class="reveal">${o.show}${o.sol ? '<p><b>Решение.</b> ' + o.sol + '</p>' : ''}</div>${videoLinks(it)}<div class="acts" style="margin-top:8px"><span class="small">Как получилось?</span><button class="btn" data-r="1">Решено верно</button><button class="btn" data-r="0">Есть ошибка</button></div></div>`);
       ans.appendChild(rv); typeset(rv);
-      rv.querySelectorAll('[data-r]').forEach(b => b.addEventListener('click', () => { if (it.state !== null) return; it.state = b.dataset.r === '1'; el.classList.add(it.state ? 'ok' : 'bad'); rec(sid, n, it.state); score(); rv.querySelectorAll('[data-r]').forEach(x => x.disabled = true); }));
+      rv.querySelectorAll('[data-r]').forEach(b => b.addEventListener('click', () => { if (it.state !== null) return; it.state = b.dataset.r === '1'; el.classList.add(it.state ? 'ok' : 'bad'); rec(sid, n, it.state); logHist(it, it.state, null); score(); rv.querySelectorAll('[data-r]').forEach(x => x.disabled = true); }));
     });
     it.filled = () => false; return el;
   }
@@ -4046,7 +4315,7 @@ function card(it, i, total) {
     const empty = !vals.some(v => v.trim()), ok = !empty && checkTask(o, vals); el.classList.remove('ok', 'bad', 'answered'); el.classList.add(ok ? 'ok' : 'bad');
     fb.className = 'fb ' + (ok ? 'ok' : 'bad');
     fb.innerHTML = ok ? 'Верно' : `${empty ? 'Нет ответа' : 'Неверно'}. Правильный ответ: <span class="right">${o.table ? 'см. разбор' : esc(showAns(o))}</span>`;
-    if (it.state === null) { it.state = ok; rec(sid, n, ok); score(); } btn.textContent = 'Проверить';
+    if (it.state === null) { it.state = ok; rec(sid, n, ok); logHist(it, ok, vals); score(); } btn.textContent = 'Проверить';
     if (!solBox.firstChild) { const extra = o.table ? `<p><b>Ответ:</b><br><span style="font-family:var(--f-mono)">${o.show}</span></p>` : ''; const s = h(`<div>${o.sol || extra ? `<details class="sol"${ok ? '' : ' open'}><summary>Разбор</summary><div class="reveal">${extra}${o.sol || ''}</div></details>` : ''}${videoLinks(it)}</div>`); solBox.appendChild(s); typeset(s); }
   };
   btn.addEventListener('click', () => it.check());
@@ -4055,9 +4324,119 @@ function card(it, i, total) {
   return el;
 }
 
+// ---------- черновик: закрывается через историю, чтобы «Назад» на телефоне возвращал к заданию ----------
+const closeDraw = () => popOverlay('draw', () => Draw.close());
+Draw.closer = closeDraw;
+
+// ---------- история решений ----------
+// Каждый проверенный ответ: время, предмет, номер, тема, зерно генерации (по нему открывается то же задание) и ответы.
+const HKEY = 'ege26:hist:v1', HMAX = 3000;
+let HIST = []; try { const x = JSON.parse(localStorage.getItem(HKEY)); if (Array.isArray(x)) HIST = x; } catch (e) { }
+let HUI = { g: 'date', err: false }; try { Object.assign(HUI, JSON.parse(localStorage.getItem('ege26:histui')) || {}); } catch (e) { }
+const saveHUI = () => { try { localStorage.setItem('ege26:histui', JSON.stringify(HUI)); } catch (e) { } };
+function saveHist() { hsT = 0; for (let i = 0; i < 5; i++) { try { localStorage.setItem(HKEY, JSON.stringify(HIST)); return; } catch (e) { if (HIST.length < 40) return; HIST = HIST.slice(Math.ceil(HIST.length / 4)); } } }
+let hsT = 0; const saveHistSoon = () => { clearTimeout(hsT); hsT = setTimeout(saveHist, 300); };
+window.addEventListener('pagehide', () => { if (hsT) { clearTimeout(hsT); saveHist(); } });
+document.addEventListener('visibilitychange', () => { if (document.hidden && hsT) { clearTimeout(hsT); saveHist(); } });
+const clip = (s, m) => { s = String(s ?? '').replace(/\s+/g, ' ').trim(); return s.length > m ? s.slice(0, m - 1).trimEnd() + '…' : s; };
+function plainText(html, drop) { const d = document.createElement('div'); d.innerHTML = String(html ?? '').replace(/<br\s*\/?>/gi, '; '); if (drop) d.querySelectorAll(drop).forEach(x => x.remove()); return d.textContent.replace(/\s+/g, ' ').trim(); }
+// короткий текст условия: без длинных текстов и рисунков; формулу посередине не обрываем
+function snippet(q, max = 160) {
+  let s = plainText(q, 'svg, style, script, details, .rtext, .ltext, .poem, .ttext, .atext, .audio, .file, .hint'); if (!s) s = plainText(q, 'svg, style, script');
+  if (s.length <= max) return s;
+  let c = s.lastIndexOf(' ', max); if (c < max * .6) c = max;
+  const o = s.lastIndexOf('\\(', c), cl = s.lastIndexOf('\\)', c);
+  if (o > cl) { const e = s.indexOf('\\)', o); c = e !== -1 && (e - c < 90 || o < 30) ? e + 2 : o; }
+  return s.slice(0, c).trimEnd() + '…';
+}
+function logHist(it, ok, vals) {
+  const o = it.o, self = o.mode === 'self', u = self ? '' : clip((vals || []).map(v => String(v).trim()).filter(Boolean).join('; '), 60);
+  const e = { t: Date.now(), s: it.sid, n: it.n, ok: ok ? 1 : 0, k: it.topic ?? null, tp: it.tp || null, sd: it.seed ?? null, h: fingerprint(o), q: snippet(o.q), u, r: self ? '' : clip(plainText(showAns(o)), 60) };
+  if (self) e.m = 's'; else if (!u) e.m = 'e';
+  HIST.push(e); if (HIST.length > HMAX) HIST.splice(0, HIST.length - HMAX); saveHistSoon();
+}
+const dayKey = t => { const d = new Date(t); return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`; };
+const hhmm = t => new Date(t).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+function dayLabel(t) {
+  const d = new Date(t), now = new Date(), y = new Date(now); y.setDate(now.getDate() - 1);
+  const s = d.toLocaleDateString('ru-RU', d.getFullYear() === now.getFullYear() ? { weekday: 'long', day: 'numeric', month: 'long' } : { day: 'numeric', month: 'long', year: 'numeric' });
+  return dayKey(t) === dayKey(now) ? 'Сегодня · ' + s : dayKey(t) === dayKey(y) ? 'Вчера · ' + s : s[0].toUpperCase() + s.slice(1);
+}
+const groupBy = (arr, f) => { const m = new Map(); arr.forEach(e => { const k = f(e); if (!m.has(k)) m.set(k, []); m.get(k).push(e); }); return m; };
+const tally = es => `${es.length} ${plural(es.length, 'задание', 'задания', 'заданий')} · верно ${es.filter(e => e.ok).length}`;
+let hFilter = null, hLimit = 150, hConfirm = false;
+function renderHistory(sid) {
+  header('history'); app.removeAttribute('data-hue'); hFilter = sid && EGE[sid] ? sid : null; hLimit = 150; hConfirm = false;
+  app.innerHTML = `<section class="wrap shead hhead"><div class="eyebrow">Хранится только в этом браузере</div><h1>История решений</h1>
+    <div class="lstats hstats"></div>
+    <div class="hctl">
+      <div class="seg" role="group" aria-label="Группировка"><span class="small">Группировать</span><button data-hg="date">по датам</button><button data-hg="subj">по предметам</button></div>
+      <label class="hsel" for="hSubj"><span class="small">Предмет</span><select id="hSubj"></select></label>
+      <label class="hchk" for="hErr"><input type="checkbox" id="hErr">Только ошибки</label>
+    </div></section>
+    <section class="wrap hbody"></section><div style="padding-bottom:40px">${footer(true)}</div>`;
+  app.querySelectorAll('[data-hg]').forEach(b => b.addEventListener('click', () => { HUI.g = b.dataset.hg; saveHUI(); drawHist(); }));
+  $('#hSubj').addEventListener('change', e => { hFilter = e.target.value || null; hLimit = 150; drawHist(); });
+  $('#hErr').addEventListener('change', e => { HUI.err = e.target.checked; saveHUI(); hLimit = 150; drawHist(); });
+  $('.hbody').addEventListener('click', onHistClick);
+  drawHist();
+}
+function drawHist() {
+  const box = $('.hbody'); if (!box) return;
+  const known = HIST.map((e, i) => Object.assign({ i }, e)).filter(e => EGE[e.s] && EGE[e.s].tasks[e.n]);
+  const present = ORDER.filter(id => EGE[id] && (id === hFilter || known.some(e => e.s === id)));
+  $('#hSubj').innerHTML = '<option value="">Все предметы</option>' + present.map(id => `<option value="${id}"${id === hFilter ? ' selected' : ''}>${EGE[id].name}</option>`).join('');
+  app.querySelectorAll('[data-hg]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.hg === HUI.g)));
+  $('#hErr').checked = !!HUI.err;
+  const scope = known.filter(e => !hFilter || e.s === hFilter), okN = scope.filter(e => e.ok).length, days = new Set(scope.map(e => dayKey(e.t))).size, today = scope.filter(e => dayKey(e.t) === dayKey(Date.now())).length;
+  const st = (v, w) => `<p><b>${v}</b><span>${w}</span></p>`;
+  $('.hstats').innerHTML = scope.length ? st(scope.length, plural(scope.length, 'задание решено', 'задания решено', 'заданий решено')) + st(Math.round(100 * okN / scope.length) + '%', 'верно') + st(days, plural(days, 'день занятий', 'дня занятий', 'дней занятий')) + st(today, 'сегодня') : '';
+  const clear = `<div class="hclear">${hConfirm ? '<span>Удалить всю историю решений? Это нельзя отменить.</span><button class="btn sm danger" data-clear="2">Да, удалить</button><button class="btn sm" data-clear="0">Отмена</button>' : '<button class="btn sm ghost" data-clear="1">Очистить историю</button>'}</div>`;
+  if (!known.length) { box.innerHTML = '<div class="hempty"><b>Здесь появятся решённые задания</b><p>Сюда записывается каждый проверенный ответ: предмет, номер, тема, ваш ответ и время. Любое задание можно открыть ещё раз.</p><button class="btn primary" data-go="home">Выбрать предмет</button></div>'; return; }
+  const list = scope.filter(e => !HUI.err || !e.ok).reverse(), shown = list.slice(0, hLimit);
+  if (!list.length) { box.innerHTML = `<p class="hnone">${HUI.err ? 'Ошибок нет — так держать.' : 'По этому предмету пока ничего не решено.'}</p>` + clear; return; }
+  const row = e => { const T = EGE[e.s].tasks[e.n], name = e.k != null && T.topics && T.topics[e.k] ? T.topics[e.k] : T.t;
+    const res = e.m === 's' ? (e.ok ? 'самопроверка: верно' : 'самопроверка: ошибка') : e.m === 'e' ? 'нет ответа' : e.ok ? 'верно' : 'ошибка';
+    return `<li class="hrow ${e.ok ? 'ok' : 'bad'}"><time datetime="${new Date(e.t).toISOString()}">${hhmm(e.t)}</time><b class="hno">${e.n}</b><div class="hmain"><div class="htl"><span class="htt">${esc(name)}</span><span class="hres">${res}</span></div>${e.q ? `<p class="hq">${esc(e.q)}</p>` : ''}${!e.ok && e.m !== 's' ? `<p class="ha">${e.u ? `Ваш ответ: <b>${esc(e.u)}</b> · ` : ''}Верный: <b>${esc(e.r)}</b></p>` : ''}<div class="hact"><button class="lnk" data-open="${e.i}">Открыть задание</button><button class="lnk" data-like="${e.i}">Ещё похожие</button></div></div></li>`; };
+  const block = (sid, es, title, dot) => { const bad = es.filter(e => !e.ok);
+    return `<div class="hsub" data-hue="${sid}"><div class="hsh">${dot ? '<i class="hdot"></i>' : ''}<b>${title}</b><span class="small">${tally(es)}</span>${bad.length ? `<button class="btn sm" data-redo="${bad.slice(0, 30).map(e => e.i).join(',')}">Повторить ошибки (${bad.length})</button>` : ''}</div><ol class="hlist">${es.map(row).join('')}</ol></div>`; };
+  const html = HUI.g === 'subj'
+    ? [...groupBy(shown, e => e.s)].map(([sid, ss]) => `<section class="hgrp" data-hue="${sid}"><h2 class="hgh"><span><i class="hdot"></i>${EGE[sid].name}</span><small>${tally(ss)}</small></h2>${[...groupBy(ss, e => dayKey(e.t))].map(([, ds]) => block(sid, ds, dayLabel(ds[0].t), false)).join('')}</section>`).join('')
+    : [...groupBy(shown, e => dayKey(e.t))].map(([, ds]) => `<section class="hgrp"><h2 class="hgh"><span>${dayLabel(ds[0].t)}</span><small>${tally(ds)}</small></h2>${[...groupBy(ds, e => e.s)].map(([sid, ss]) => block(sid, ss, EGE[sid].name, true)).join('')}</section>`).join('');
+  const more = list.length > shown.length ? `<div class="hmore"><button class="btn" data-more="1">Показать ещё</button><span class="small">показано ${shown.length} из ${list.length}</span></div>` : '';
+  box.innerHTML = html + more + clear; typeset(box);
+}
+function onHistClick(e) {
+  const b = e.target.closest('button'); if (!b) return; const d = b.dataset;
+  if (d.open != null) replay([+d.open], 'Из истории');
+  else if (d.like != null) { const x = HIST[+d.like]; if (x && EGE[x.s]) startPractice(x.s, [{ n: x.n, k: 5, topics: x.k != null ? [x.k] : null }]); }
+  else if (d.redo) replay(d.redo.split(',').map(Number), 'Работа над ошибками');
+  else if (d.more) { hLimit += 150; drawHist(); }
+  else if (d.clear) { if (d.clear === '2') { HIST = []; clearTimeout(hsT); saveHist(); } hConfirm = d.clear === '1'; drawHist(); }
+}
+// то же задание ещё раз: генерируем с тем же зерном и темами; отпечаток показывает, совпало ли оно точно
+function replay(idx, label) {
+  const es = idx.map(i => HIST[i]).filter(e => e && EGE[e.s] && EGE[e.s].tasks[e.n]); if (!es.length) return;
+  const sid = es[0].s, out = []; let changed = 0;
+  es.filter(e => e.s === sid).forEach(e => {
+    const T = EGE[sid].tasks[e.n]; let o = null; TOPIC = e.tp || null; LAST_SUB = null;
+    try { o = e.sd != null ? withSeed(e.sd, () => T.gen()) : T.gen(); } catch (x) { o = null; } TOPIC = null;
+    if (!o) return; if (e.sd == null || fingerprint(o) !== e.h) changed++;
+    out.push({ sid, n: e.n, o, seed: e.sd ?? null, tp: e.tp || null, topic: e.k ?? null });
+  });
+  if (!out.length) return;
+  const notes = changed ? [out.length === 1 ? 'Это задание изменилось после обновления сайта, поэтому показан похожий вариант.' : `${changed} ${plural(changed, 'задание изменилось', 'задания изменились', 'заданий изменились')} после обновления сайта, вместо них показаны похожие.`] : [];
+  const plan = [...groupBy(out, x => x.n)].map(([n, xs]) => ({ n, k: xs.length, topics: xs[0].topic != null && xs.every(x => x.topic === xs[0].topic) ? [xs[0].topic] : null }));
+  startPractice(sid, plan, out.length === 1 ? null : label, { out, notes });
+}
+
 // ---------- старт ----------
 header(null);
-(() => { const x = location.hash.slice(1); if (SUBJ.includes(x)) renderSubject(x); else renderHome(); })();
+(() => { const x = location.hash.slice(1);
+  if (SUBJ.includes(x)) { renderSubject(x); VIEW = { v: 'subj', sid: x, pid: null }; }
+  else if (x === 'history') { renderHistory(null); VIEW = { v: 'hist', sid: null, pid: null }; }
+  else { renderHome(); VIEW = { v: 'home', sid: null, pid: null }; }
+  try { history.replaceState(VIEW, '', location.href); } catch (e) { } })();
 
 
 </script>
